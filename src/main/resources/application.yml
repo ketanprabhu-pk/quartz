@@ -1,0 +1,61 @@
+server:
+  port: '8081'
+spring:
+  main:
+    banner-mode: 'off'
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: 'jdbc:mysql://localhost:3306/scheduler_app'
+    username: '${USER}'
+    password: PassWord@123
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+            instanceName: quartz-demo-app
+          jobStore:
+            useProperties: true
+            isClustered: true
+            clusterCheckinInterval: 5000
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            dataSource: quartzDataSource
+            misfireThreshold: 60000
+          dataSource:
+            quartzDataSource:
+              driver: om.mysql.cj.jdbc.Driver
+              URL: jdbc:mysql://localhost:3306/scheduler_app
+              user: ${USER}
+              password: PassWord@123
+          plugin:
+            shutdownHook:
+              class: org.quartz.plugins.management.ShutdownHookPlugin
+              cleanShutdown: true
+  jndi:
+    ignore: true
+using:
+  spring:
+    schedulerFactory: true
+'#spring':
+  quartz:
+    jdbc:
+      initialize-schema: always
+logging:
+  level:
+    gigvistas:
+      scheduler: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss}-%t-%x-%-5p-%-10c : %msg%n'
+gcp:
+  project:
+    id: gv-dev-321911
+  pubSub:
+    topic:
+      id: user-notifications
+    sub:
+      id: user-notifications-sub
